@@ -28,13 +28,32 @@ def func2(x, y=4, z=2):
 
 # the simple decorator
 
+
 def p_wrapper(f):
-    """
-    fill in decorator here
-    """
-    pass
+    def wrapper(*args):
+        ret = f(*args)
+        return "<p>%s</p>" % ret
+    return wrapper
 
 
+def tag_wrapper(tagName):
+    def wrapperWrapper(f):
+        def wrapper(*args):
+            ret = f(*args)
+            return "<%s>%s</%s>" % (tagName, ret, tagName)
+        return wrapper
+    return wrapperWrapper
+
+
+class TagWrapper:
+    def __init__(self, tagName):
+        self.tagName = tagName
+
+    def __call__(self, func):  # runs when memoize instance is called
+        def wrapper(*args):
+            ret = func(*args)
+            return "<%s>%s</%s>" % (self.tagName, ret, self.tagName)
+        return wrapper
 
 # give it a try:
 if __name__ == "__main__":
@@ -60,35 +79,45 @@ if __name__ == "__main__":
     # try it with another function
 
     @p_wrapper
-    def func2(x,y):
-        return "the sum of %s and %s is %s"%(x, y, x+y)
+    def func2(x, y):
+        return "the sum of %s and %s is %s" % (x, y, x + y)
 
     # call it:
-    print func2(3,4)
+    print func2(3, 4)
 
     # and one with keyword arguments
 
     @p_wrapper
     def func2(x, y=4, z=2):
-        return "the sum of %s and %s and %s is %s"%(x, y, z, x+y+z)
+        return "the sum of %s and %s and %s is %s" % (x, y, z, x + y + z)
 
     # call it:
     print func2(3)
     print func2(3, 5)
     print func2(3, 5, 7)
 
+    ## and try the class version:
 
-    # ## and try the class version:
+    @TagWrapper('h1')
+    def func2(x, y=4, z=2):
+        return "the sum of %s and %s and %s is %s" % (x, y, z, x + y + z)
 
-    # @tag_wrapper('h1')
-    # def func2(x, y=4, z=2):
-    #     return "the sum of %s and %s and %s is %s"%(x, y, z, x+y+z)
+    print func2(3, 4)
 
-    # print func2(3,4)
+    @TagWrapper('div')
+    def func2(x, y=4, z=2):
+        return "the sum of %s and %s and %s is %s" % (x, y, z, x + y + z)
 
-    # @tag_wrapper('div')
-    # def func2(x, y=4, z=2):
-    #     return "the sum of %s and %s and %s is %s"%(x, y, z, x+y+z)
+    print func2(5, 6, 7)
 
-    # print func2(5,6,7)
+    @tag_wrapper('h1')
+    def func2(x, y=4, z=2):
+        return "the sum of %s and %s and %s is %s" % (x, y, z, x + y + z)
 
+    print func2(3, 4)
+
+    @tag_wrapper('div')
+    def func2(x, y=4, z=2):
+        return "the sum of %s and %s and %s is %s" % (x, y, z, x + y + z)
+
+    print func2(5, 6, 7)

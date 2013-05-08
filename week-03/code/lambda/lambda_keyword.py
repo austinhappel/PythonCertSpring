@@ -33,6 +33,25 @@ extra credit: do it with a list comprhension, instead of a for loop
 
 """
 
-def function_builder(n):
-    ## put somethingin here...
-    pass
+
+# Write a function that returns a list of n functions,
+# such that each one, when called, will return the input value,
+# incremented by an increaseing number.
+
+def function_builder(howmany):
+    return [lambda n, i=i: n + i for i in range(howmany)]
+
+
+# def function_builder(howmany):
+#     ret = []
+
+#     for x in range(howmany):
+#         ret.append(lambda n, x=x: n + x)
+
+#     return ret
+
+
+if __name__ == '__main__':
+    the_list = function_builder(4)
+    print the_list[0](2)
+    print the_list[1](2)
