@@ -4,6 +4,7 @@
 timing example
 """
 
+# @profile
 def primes_stupid(N):
     """
     a really simple way to compute the first N prime numbers
@@ -11,7 +12,7 @@ def primes_stupid(N):
     primes = [2]
     i = 3
     while len(primes) < N:
-        for j in range(2, i/2): # the "/2" is an optimization -- no point in checking even numbers
+        for j in range(2, i): 
             if not i % j: # it's not prime
                 break
         else:
@@ -23,8 +24,13 @@ def primes_stupid(N):
 if __name__ == "__main__":
     import timeit
 
-    print "running the timer:"
-    run_time = timeit.timeit("primes_stupid(5)",
+
+    print "running the timer on primes_stupid:"
+    run_time = timeit.timeit("primes_stupid(100)",
                              setup="from __main__ import primes_stupid",
-                             number=100000) # default: 1000000
-    print "it took:", run_time
+                             number=500) # default: 1000000
+    print "it took: %f seconds"%run_time
+    primes_stupid(100)
+
+
+
